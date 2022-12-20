@@ -42,12 +42,15 @@ async function deletePost(id: string): Promise<void> {
 
 const Post: React.FC<PostProps> = (props) => {
   const { data: session, status } = useSession();
+  console.log(props);
   if (status === 'loading') {
     return <div>Authenticating ...</div>;
   }
   const userHasValidSession = Boolean(session);
-  const postBelongsToUser = session?.user?.email === props.author?.email;
-  let title = props.title;
+  const postBelongsToUser = session?.user?.email === props.post.author.email;
+  console.log(postBelongsToUser);
+  // console.log(props?.author?.name);
+  let title = props.post.title;
   if (!props.published) {
     title = `${title} (Draft)`;
   }
@@ -56,16 +59,16 @@ const Post: React.FC<PostProps> = (props) => {
     <Layout>
       <div>
         <h2>{title}</h2>
-        <p>By {props?.author?.name || 'Unknown author'}</p>
+        <p>By {props.post.author.name || 'Unknown author'}</p>
         <ReactMarkdown>
-        {props.content}
+        {props.post.content}
             </ReactMarkdown>
-        {!props.published && userHasValidSession && postBelongsToUser && (
-          <button onClick={() => publishPost(props.id)}>Publish</button>
+        {!props.post.published && userHasValidSession && postBelongsToUser && (
+          <button onClick={() => publishPost(props.post.id)}>Publish</button>
         )}
         {
   userHasValidSession && postBelongsToUser && (
-    <button onClick={() => deletePost(props.id)}>Delete</button>
+    <button onClick={() => deletePost(props.post.id)}>Delete</button>
   )
 }
 
